@@ -1,3 +1,5 @@
+const path = require('path')
+
 exports.keys = "abcdefg123456";
 exports.view = {
     defaultViewEngine: 'nunjucks',
@@ -6,12 +8,8 @@ exports.view = {
     }
 }
 exports.sequelize = {
-    dialect: 'mysql',
-    database: 'wequiz',
-    host: 'localhost',
-    port: '3306',
-    username: 'root',
-    password: ''
+    dialect: 'sqlite',
+    storage: path.resolve(__dirname, '../database/data.sqlite'),
 }
 exports.redis = {
     clients: {
@@ -29,7 +27,7 @@ exports.redis = {
         }
     }
 }
-module.exports = {
+exports.exports = {
     session: {
         renew: true
     }
