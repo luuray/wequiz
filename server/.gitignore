@@ -703,3 +703,4 @@ server/run
 
 config.dev.js
 config.local.js
+database/*.sqlite

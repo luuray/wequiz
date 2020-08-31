@@ -13,6 +13,7 @@ module.exports = {
             },
             share_id: {
                 defaultValue: Sequelize.UUIDV4,
+                allowNull: false,
                 type: Sequelize.UUID
             },
             name: {

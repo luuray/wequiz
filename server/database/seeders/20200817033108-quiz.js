@@ -1,10 +1,12 @@
 'use strict';
+const {v4: uuid} = require('uuid');
 
 module.exports = {
     up: async (queryInterface, Sequelize) => {
         await queryInterface.bulkInsert('quiz', [
             {
                 owner_id: 1,
+                share_id: uuid(),
                 name: '测试1-允许匿名',
                 anonymously_answer: true,
                 description: "测试1，允许匿名，共3题",
@@ -12,6 +14,7 @@ module.exports = {
             },
             {
                 owner_id: 1,
+                share_id: uuid(),
                 name: '测试2-允许匿名',
                 anonymously_answer: true,
                 description: "测试2，允许匿名，共5题",
@@ -19,6 +22,7 @@ module.exports = {
             },
             {
                 owner_id: 1,
+                share_id: uuid(),
                 name: '测试3-不可匿名',
                 anonymously_answer: true,
                 description: "测试3，不可匿名，共3题",

@@ -28,20 +28,21 @@ module.exports = (app) => {
             type: DataTypes.JSON
         },
         created_at: {
-            allowNull: false,
             type: DataTypes.DATE
         },
         updated_at: {
-            allowNull: false,
             type: DataTypes.DATE
         }
     }, {
         freezeTableName: true,
+        tableName: 'quiz_item',
+        createdAt: 'created_at',
+        updatedAt: 'updated_at',
         underscored: true
     })
 
-    QuizItem.associate = function () {
-        QuizItem.belongsTo(app.model.Quiz, {as: 'quiz', foreignKey: 'quiz_id'})
+    QuizItem.prototype.associate = function () {
+        app.model.QuizItem.belongsTo(app.model.Quiz, {as: 'quiz', foreignKey: 'quiz_id'})
     }
 
     return QuizItem;

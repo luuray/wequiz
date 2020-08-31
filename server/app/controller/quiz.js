@@ -1,18 +1,86 @@
 const Controller = require('egg').Controller;
 
 class QuizController extends Controller {
-    async begin(shareId) {
+    async intro() {
         const {ctx} = this;
-        const quiz = ctx.service.quiz.getByShareId(shareId);
+        const quiz = await ctx.service.quiz.getByShareId(ctx.params.shareId);
         if (!quiz) {
             ctx.status = 404;
-            ctx.body = {message: "quiz not found"}
+            ctx.body = {message: "invalid share_id"}
         } else {
             ctx.status = 200;
             ctx.body = quiz.toJSON();
         }
     }
 
+    async begin() {
+        const {ctx} = this;
+
+        let quiz = await ctx.service.quiz.getByShareId(ctx.request.body.share_id);
+        if (!quiz) {
+            ctx.status = 404;
+            ctx.body = {message: "invalid share_id"}
+            return;
+        }
+        if (quiz.anonymously_answer !== true && ctx.isAuthenticated() === false) {
+            ctx.status = 401;
+            ctx.body = {message: "quiz required authentication"}
+
+            return;
+        }
+        try {
+            let quizSession = await ctx.service.quiz.begin(
+                quiz.id,
+                ctx.isAuthenticated() ? ctx.user.user_id : null);
+
+            let question = await ctx.service.quiz.getQuizItem(quiz.id, 1);
+
+            ctx.status = 200;
+            ctx.body = {
+                message: "success",
+                result_id: quizSession.id,
+                next: quizSession.has_next,
+                item: question
+            };
+        } catch (e) {
+            ctx.status = 500;
+            ctx.body = {
+                message: e.message
+            }
+        }
+    }
+
+    //下一题
+    async next() {
+        const {ctx} = this;
+
+        let resultId = ctx.request.body.result_id;
+        if (!resultId) {
+
+        }
+    }
+
+    async finish() {
+        const {ctx} = this;
+        ctx.body = {
+            message: "xxx"
+        }
+    }
+
+    async list() {
+        const {ctx} = this;
+
+        let result = await ctx.service.quiz.list(
+            ctx.query.offset || 0,
+            ctx.query.limit || 20,
+            ctx.isAuthenticated() ? ctx.user.user_id : null);
+
+        result.items.forEach((ele, idx) => {
+            delete result.items[idx].id;
+        })
+
+        ctx.body = result;
+    }
 }
 
 module.exports = QuizController

@@ -16,8 +16,12 @@ module.exports = {
                 allowNull: true,
                 type: Sequelize.BIGINT
             },
+            progress: {
+                allowNull: false,
+                type: Sequelize.JSON
+            },
             result: {
-                type: Sequelize.STRING
+                type: Sequelize.JSON
             },
             created_at: {
                 allowNull: false,

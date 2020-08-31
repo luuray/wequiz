@@ -1,5 +1,6 @@
 module.exports = app => {
     const {router, controller} = app;
+
     router.get('/', controller.index.index)
 
     //passport
@@ -15,5 +16,9 @@ module.exports = app => {
     router.get('/passport/profile', controller.passport.profile);
 
     //quiz
-    router.get('/quiz/begin/:share_id', controller.quiz.begin)
+    router.get('/quiz/list', controller.quiz.list);
+    router.get('/quiz/intro/:shareId', controller.quiz.intro);
+    router.post('/quiz/begin', controller.quiz.begin);
+    router.post('/quiz/next', controller.quiz.next);
+    router.post('/quiz/finish', controller.quiz.finish);
 }
