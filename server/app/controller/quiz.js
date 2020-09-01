@@ -53,10 +53,32 @@ class QuizController extends Controller {
     //下一题
     async next() {
         const {ctx} = this;
+        const requestRule = {
+            result_id: 'string'
+        }
 
-        let resultId = ctx.request.body.result_id;
-        if (!resultId) {
+        //validate
+        ctx.validate(requestRule);
 
+        const resultSet = await ctx.service.quiz.getResult(ctx.request.body.result_id);
+        if (resultSet === null) {
+            ctx.status = 404;
+            ctx.body = {message: "invalid result_id"}
+        } else {
+            let item = await ctx.service.quiz.getNextItem(resultSet);
+
+            if (item !== false) {
+                ctx.status = 200;
+                ctx.body = {
+                    message: "success",
+                    result_id: resultSet.id,
+                    next: resultSet.has_next,
+                    item: item
+                };
+            } else {
+                //finish
+                ctx.redirect(ctx.helper.urlFor('QuizFinish', {result_id: resultSet.id}));
+            }
         }
     }
 

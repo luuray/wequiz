@@ -52,6 +52,36 @@ class QuizService extends Service {
         });
     }
 
+    /**
+     *
+     * @param resultSet QuizResult
+     * @returns {Promise<void>}
+     */
+    async getNextItem(resultSet) {
+        const {ctx} = this;
+
+        if (resultSet.has_next) {
+            let item = await this.getQuizItem(resultSet.quiz_id, resultSet.next_index);
+            if (item !== null) {
+                resultSet.progress = [resultSet.next_index, resultSet.progress[1]];
+                await resultSet.save();
+
+                return item;
+            } else {
+                throw new Error('next quiz item is missing');
+            }
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     *
+     * @param offset
+     * @param limit
+     * @param userId
+     * @returns {Promise<{total: *, items: number | TInstance[] | M[] | HTMLCollectionOf<HTMLTableRowElement> | SQLResultSetRowList | string}>}
+     */
     async list(offset = 0, limit = 20, userId = null) {
         const {ctx} = this;
 
@@ -95,6 +125,11 @@ class QuizService extends Service {
         return {total: result.count, items: result.rows}
     }
 
+    async getResult(resultId) {
+        const {ctx} = this;
+
+        return await ctx.model.QuizResult.findByPk(resultId);
+    }
 }
 
 module.exports = QuizService;

@@ -11,6 +11,10 @@ exports.sequelize = {
     dialect: 'sqlite',
     storage: path.resolve(__dirname, '../database/data.sqlite'),
 }
+exports.validate = {
+    convert: true,
+    validateRoot: false
+}
 exports.redis = {
     clients: {
         cache: {

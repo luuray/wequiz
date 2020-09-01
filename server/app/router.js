@@ -20,5 +20,5 @@ module.exports = app => {
     router.get('/quiz/intro/:shareId', controller.quiz.intro);
     router.post('/quiz/begin', controller.quiz.begin);
     router.post('/quiz/next', controller.quiz.next);
-    router.post('/quiz/finish', controller.quiz.finish);
+    router.get('QuizFinish', '/quiz/finish/:result_id', controller.quiz.finish);
 }
